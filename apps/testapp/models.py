@@ -30,30 +30,35 @@ class CustomUserManager(BaseUserManager):
 
 
 class CustomUser(AbstractUser):
-   class Role(models.TextChoices):
-      ADMIN = "admin", "Администратор"
-      MODERATOR = "moderator", "Модератор"
-      USER = "user", "Пользователь"
+    class Role(models.TextChoices):
+        ADMIN = "admin", "Администратор"
+        MODERATOR = "moderator", "Модератор"
+        CLIENT = "client", "Клиент"
+        USER = "user", "Пользователь"
 
-   email = models.EmailField(unique=True)
-   username = models.CharField(max_length=255, blank=True, null=True)
+    email = models.EmailField(unique=True)
+    username = models.CharField(max_length=255, blank=True, null=True)
 
-   role = models.CharField(
-      max_length=20,
-      choices=Role.choices,
-      default=Role.USER
-   )
-   phone = models.CharField(max_length=20, blank=True, null=True)
-   avatar = models.ImageField(upload_to="avatars/%Y/%m/%d", blank=True, null=True)
+    role = models.CharField(
+        max_length=20,
+        choices=Role.choices,
+        default=Role.CLIENT
+    )
+    phone = models.CharField(max_length=20, blank=True, null=True)
+    avatar = models.ImageField(upload_to="avatars/%Y/%m/%d", blank=True, null=True)
 
-   USERNAME_FIELD = "email"
-   REQUIRED_FIELDS = []
+    bio = models.TextField(blank=True, null=True, verbose_name="Описание профиля")
+    birth_date = models.DateField(blank=True, null=True, verbose_name="Дата рождения")
+    is_verified = models.BooleanField(default=False, verbose_name="Аккаунт подтвержден")
 
-   objects = CustomUserManager()
+    USERNAME_FIELD = "email"
+    REQUIRED_FIELDS = []
 
-   def __str__(self):
-      return self.email
+    objects = CustomUserManager()
 
-   class Meta:
-      verbose_name = "Пользователь"
-      verbose_name_plural = "Пользователи"
+    def __str__(self):
+        return self.email
+
+    class Meta:
+        verbose_name = "Пользователь"
+        verbose_name_plural = "Пользователи"
